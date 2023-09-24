@@ -109,6 +109,7 @@ module.exports = class AuthContollers {
           refresh_token: refreshToken,
         },
       });
+      console.log("refresh token is " + refreshToken);
       if (!user) res.clearCookie("refreshToken").sendStatus(403);
       jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
         if (err) return res.clearCookie("refreshToken").sendStatus(403);

@@ -1,6 +1,10 @@
 {
   "globals": {
-    "process": "readonly"
+    "process": "readonly",
+    "describe": "readonly",
+    "expect": "readonly",
+    "it": "readonly",
+    "jest": "readonly"
   },
   "env": {
     "browser": true,

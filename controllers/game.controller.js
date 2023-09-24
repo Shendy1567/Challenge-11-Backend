@@ -11,7 +11,10 @@ module.exports = class GameControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 };
