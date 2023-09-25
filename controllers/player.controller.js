@@ -18,7 +18,10 @@ module.exports = class PlayerControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -52,14 +55,12 @@ module.exports = class PlayerControllers {
           result: "Success",
           message: `Player with id: ${id} successfully updated`,
         });
-      } else {
-        return res.status(500).json({
-          result: "failed",
-          message: "Failed to update",
-        });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 };

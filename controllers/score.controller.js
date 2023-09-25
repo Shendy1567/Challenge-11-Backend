@@ -40,15 +40,13 @@ module.exports = class ScoreControllers {
               message: `Player with id: ${id} lose`,
             });
           }
-        } else {
-          return res.status(500).json({
-            result: "failed",
-            message: "Failed to get",
-          });
         }
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -63,9 +61,9 @@ module.exports = class ScoreControllers {
         limit: 5,
       });
       if (score.length === 0) {
-        return res.status(500).json({
+        return res.status(404).json({
           result: "failed",
-          message: "This player didnt have score",
+          message: "This player didn't have score",
         });
       } else {
         return res.status(200).json({
@@ -74,7 +72,10 @@ module.exports = class ScoreControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -87,9 +88,9 @@ module.exports = class ScoreControllers {
         },
       });
       if (score.length === 0) {
-        return res.status(500).json({
+        return res.status(404).json({
           result: "failed",
-          message: "This player didnt have score",
+          message: "This player didn't have score",
         });
       } else {
         let scoreArr = [];
@@ -102,7 +103,10 @@ module.exports = class ScoreControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -116,9 +120,9 @@ module.exports = class ScoreControllers {
         },
       });
       if (score.length === 0) {
-        return res.status(500).json({
+        return res.status(404).json({
           result: "failed",
-          message: "This player didnt have score",
+          message: "This player didn't have score",
         });
       } else {
         let scoreArr = [];
@@ -131,7 +135,10 @@ module.exports = class ScoreControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -165,7 +172,10 @@ module.exports = class ScoreControllers {
         data: result,
       });
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 
@@ -179,7 +189,7 @@ module.exports = class ScoreControllers {
       });
 
       if (scores.length === 0) {
-        return res.status(500).json({
+        return res.status(404).json({
           result: "failed",
           message: "This game didn't have a score",
         });
@@ -216,7 +226,10 @@ module.exports = class ScoreControllers {
         });
       }
     } catch (error) {
-      next(error);
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
     }
   }
 };

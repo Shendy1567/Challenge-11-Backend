@@ -5,10 +5,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("Users", [
       {
-        username: "shendy",
-        email: "shendy@gmail.com",
+        username: "test",
+        email: "test@gmail.com",
         password:
-          "$2b$10$simJj63/9.7CeU6qU0oLOu46VPrvc.9zTL9xkpt8KNTrWaiK.Cza6",
+          "$2b$10$UDT/Yz0mi6TYdBOjnTrgKeCo5z6ErbvSFNXzhX2LHL2HG3dQOo3k2",
         role: "user",
         profile_image_url:
           "https://res.cloudinary.com/dz0cuhiny/image/upload/v1695552914/rupfbhmp96bkdscy2x9g.jpg",
