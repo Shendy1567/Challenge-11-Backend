@@ -7,7 +7,6 @@ module.exports = class AuthCheckMiddleware {
     if (!authToken) return res.sendStatus(401);
     jwt.verify(authToken, process.env.ACCESS_TOKEN, (err, decoded) => {
       if (err) {
-        console.log(err);
         return res.sendStatus(403);
       }
       req.email = decoded.email;
