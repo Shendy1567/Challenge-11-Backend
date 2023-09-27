@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1695823321396" clover="3.2.0">
-  <project timestamp="1695823321396" name="All files">
-    <metrics statements="819" coveredstatements="768" conditionals="91" coveredconditionals="90" methods="24" coveredmethods="21" elements="934" coveredelements="879" complexity="0" loc="819" ncloc="819" packages="7" files="21" classes="21"/>
+<coverage generated="1695823712679" clover="3.2.0">
+  <project timestamp="1695823712679" name="All files">
+    <metrics statements="769" coveredstatements="741" conditionals="91" coveredconditionals="90" methods="23" coveredmethods="21" elements="883" coveredelements="852" complexity="0" loc="769" ncloc="769" packages="7" files="19" classes="19"/>
     <package name="controllers">
       <metrics statements="465" coveredstatements="465" conditionals="73" coveredconditionals="73" methods="13" coveredmethods="13"/>
       <file name="auth.contoller.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/controllers/auth.contoller.js">
@@ -686,9 +686,9 @@
       </file>
     </package>
     <package name="routes">
-      <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="index.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/routes/index.js">
-        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -699,12 +699,10 @@
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
       </file>
     </package>
     <package name="routes.api">
-      <metrics statements="108" coveredstatements="73" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="83" coveredstatements="64" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="auth.routes.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/routes/api/auth.routes.js">
         <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -806,37 +804,9 @@
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
       </file>
-      <file name="video.routes.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/routes/api/video.routes.js">
-        <metrics statements="25" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="1" type="stmt"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="1" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="25" count="1" type="stmt"/>
-      </file>
     </package>
     <package name="utils">
-      <metrics statements="58" coveredstatements="42" conditionals="1" coveredconditionals="1" methods="4" coveredmethods="1"/>
+      <metrics statements="35" coveredstatements="26" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="1"/>
       <file name="passwordHandler.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/utils/passwordHandler.js">
         <metrics statements="11" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -877,32 +847,6 @@
         <line num="22" count="1" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
-      </file>
-      <file name="uploadVideo.js" path="/home/shendy/binar/Challenge/Challenge-11/backend/utils/uploadVideo.js">
-        <metrics statements="23" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="1" count="1" type="stmt"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="21" count="1" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
-        <line num="23" count="1" type="stmt"/>
       </file>
     </package>
   </project>
