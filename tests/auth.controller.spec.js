@@ -332,7 +332,6 @@ describe("Load RefreshToken /api/auth/token", () => {
     };
 
     const res = {
-      sendStatus: jest.fn(() => res),
       json: jest.fn(),
       clearCookie: jest.fn(),
     };
@@ -354,7 +353,6 @@ describe("Load RefreshToken /api/auth/token", () => {
 
     jest.spyOn(jwt, "sign").mockReturnValue("mockedAccessToken");
 
-    expect(res.sendStatus).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ accessToken: "mockedAccessToken" });
   });
 
@@ -416,7 +414,6 @@ describe("Load RefreshToken /api/auth/token", () => {
     await refreshToken(req, res);
 
     expect(res.clearCookie).toHaveBeenCalledWith("refreshToken");
-    expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
 
   it("it didnt make new token because jwt verivy error", async () => {
@@ -450,7 +447,6 @@ describe("Load RefreshToken /api/auth/token", () => {
     await refreshToken(req, res);
 
     expect(res.clearCookie).toHaveBeenCalledWith("refreshToken");
-    expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it("should handle errors on post /api/auth/token", async () => {

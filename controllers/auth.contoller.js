@@ -109,7 +109,7 @@ module.exports = class AuthContollers {
     return res.sendStatus(200);
   }
 
-  async refreshToken(req, res, next) {
+  async refreshToken(req, res) {
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) return res.sendStatus(204);
@@ -118,28 +118,20 @@ module.exports = class AuthContollers {
           refresh_token: refreshToken,
         },
       });
-      if (!user) {
-        res.sendStatus(404);
-        res.clearCookie("refreshToken");
-      }
+      if (!user) return res.clearCookie("refreshToken").sendStatus(403);
       jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
-        if (err) {
-          res.clearCookie("refreshToken");
-          res.sendStatus(403);
-        }
+        if (err) return res.clearCookie("refreshToken").sendStatus(403);
         const userId = user.id;
         const username = user.username;
         const email = user.email;
-        const picture = user.profile_image_url;
 
         const accessToken = jwt.sign(
-          { userId, username, email, picture },
+          { userId, username, email },
           process.env.ACCESS_TOKEN,
           {
             expiresIn: "15s",
           }
         );
-        res.sendStatus(200);
         res.json({ accessToken });
       });
     } catch (error) {
