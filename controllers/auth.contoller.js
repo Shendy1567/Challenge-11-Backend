@@ -124,9 +124,10 @@ module.exports = class AuthContollers {
         const userId = user.id;
         const username = user.username;
         const email = user.email;
+        const picture = user.profile_image_url;
 
         const accessToken = jwt.sign(
-          { userId, username, email },
+          { userId, username, email, picture },
           process.env.ACCESS_TOKEN,
           {
             expiresIn: "15s",
