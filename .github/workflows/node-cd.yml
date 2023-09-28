@@ -27,5 +27,4 @@ jobs:
           && source ~/.nvm/nvm.sh \
           && npm install --only=prod \
           && npm test \
-          && pm2 restart ecosystem.config.js \
-          && pm2 restart CH11Backend \
+          && pm2 restart app.js \
