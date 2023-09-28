@@ -11,9 +11,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set PM2 Path
-      run: |
-        export PATH="$PATH:~/.nvm/versions/node/v18.18.0/bin"
 
     - name: Deploy using Username $ Password
       uses: appleboy/ssh-action@v1.0.0
@@ -31,4 +28,4 @@ jobs:
           && source ~/.nvm/nvm.sh \
           && npm install --only=prod \
           && npm test \
-          && ~/.nvm/versions/node/v18.18.0/bin/pm2 restart CH11Backend \
+          && pm2 restart CH11Backend
