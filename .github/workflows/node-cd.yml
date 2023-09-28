@@ -25,6 +25,7 @@ jobs:
           && git pull origin main \
           && export NVM_DIR=~/.nvm \
           && source ~/.nvm/nvm.sh \
+          && export PATH="$PATH:~/.nvm/versions/node/v18.18.0/bin" \
           && npm install --only=prod \
           && npm test \
-          && pm2 restart app.js \
+          && export PATH="$PATH:~/.nvm/versions/node/v18.18.0/bin" CH11Backend \
