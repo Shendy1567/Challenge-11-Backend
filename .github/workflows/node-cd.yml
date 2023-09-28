@@ -1,4 +1,4 @@
-name: CD
+name: deploy
 
 on:
   push:
@@ -11,13 +11,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@v0.1.4 
+    - name: Deploy using Username $ Password
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
+        password: FSW33T34m2
         port: 22
+        sync: true
         script: |
           cd ~/apps/Challenge-11-Backend
           git pull origin main
