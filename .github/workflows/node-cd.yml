@@ -23,7 +23,6 @@ jobs:
           cd ~/apps/Challenge-11-Backend \
           && git reset --hard \
           && git pull origin main \
-          && git status \
           && npm install --only=prod \
           && npm test \
           && pm2 restart CH11Backend \
