@@ -7,13 +7,13 @@ const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: process.env.CORS_ORIGINS }));
 app.use(express.json());
 
 app.use("/", apiRouter);
 
 const PORT = 8000;
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server is running on port ${PORT}.`);
+	// eslint-disable-next-line no-console
+	console.log(`Server is running on port ${PORT}.`);
 });
