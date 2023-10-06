@@ -1,11 +1,10 @@
-const { User } = require("../database/models");
-const { hashPassword } = require("../utils/passwordHandler");
+const playerService = require("../services/player.services");
 
 module.exports = class PlayerControllers {
   async getPlayerById(req, res, next) {
     try {
       const { id } = req.params;
-      const player = await User.findByPk(id);
+      const player = await playerService.getPlayerById(id);
       if (player) {
         return res.status(200).json({
           status: "Success",
@@ -29,33 +28,25 @@ module.exports = class PlayerControllers {
     try {
       const { id } = req.params;
       const { username, email, password } = req.body;
-      const data = await User.findByPk(id);
+      const data = await playerService.getPlayerById(id);
+
       if (!data)
         return res.status(404).json({
           result: "Not found",
           message: `Player with id: ${id} not found`,
         });
-      const updateFields = {};
-      if (username) {
-        updateFields.username = username;
-      }
 
-      if (email) {
-        updateFields.email = email;
-      }
+      const result = await playerService.updatePlayer(
+        id,
+        username,
+        email,
+        password
+      );
 
-      if (password) {
-        updateFields.password = await hashPassword(password);
-      }
-      const [updateCount] = await User.update(updateFields, {
-        where: { id: id },
+      return res.status(200).json({
+        result: "Success",
+        message: result.message,
       });
-      if (updateCount === 1) {
-        return res.status(200).json({
-          result: "Success",
-          message: `Player with id: ${id} successfully updated`,
-        });
-      }
     } catch (error) {
       return res.status(500).json({
         result: "Error",

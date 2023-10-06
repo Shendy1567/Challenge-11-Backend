@@ -27,7 +27,7 @@ describe("Get Leaderboard /api/score/leaderboard", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });
@@ -78,7 +78,7 @@ describe("Get Leaderboard by game id /api/score/leaderboard/:id", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });
@@ -139,7 +139,7 @@ describe("Get History Score by Id /api/score/history/:id", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });
@@ -184,7 +184,7 @@ describe("Get Total Score by Id /api/score/:id", () => {
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({
       result: "failed",
-      message: "This player didn't have score",
+      message: "This player didn't have score yet",
     });
   });
 
@@ -195,7 +195,7 @@ describe("Get Total Score by Id /api/score/:id", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });
@@ -240,7 +240,7 @@ describe("Get Total Score in game by Id /api/score/:gameId/:id", () => {
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({
       result: "failed",
-      message: "This player didn't have score",
+      message: "This player didn't have score yet",
     });
   });
 
@@ -252,7 +252,7 @@ describe("Get Total Score in game by Id /api/score/:gameId/:id", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });
@@ -370,7 +370,7 @@ describe("Post Score in game by Id /api/score/:gameId/:id", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       result: "Error",
-      error: "Database error",
+      error: "Error connection to database: Database error",
     });
   });
 });

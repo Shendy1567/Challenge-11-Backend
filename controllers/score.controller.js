@@ -1,16 +1,14 @@
-const { User, Game, Score } = require("../database/models");
+const scoreServices = require("../services/score.services");
+const playerServices = require("../services/player.services");
+const gameServices = require("../services/game.services");
 
 module.exports = class ScoreControllers {
   async UpdateScore(req, res, next) {
     try {
       const { id, gameId } = req.params;
       const { score } = req.body;
-      const player = await User.findByPk(id);
-      const game = await Game.findOne({
-        where: {
-          id: gameId,
-        },
-      });
+      const player = await playerServices.getPlayerById(id);
+      const game = await gameServices.getGameByid(gameId);
       if (!player)
         return res.status(404).json({
           result: "Not found",
@@ -23,11 +21,7 @@ module.exports = class ScoreControllers {
         });
 
       if (player && game) {
-        const getScore = await Score.create({
-          userId: id,
-          gameId: gameId,
-          score,
-        });
+        const getScore = await scoreServices.updateScore(id, gameId, score);
         if (getScore) {
           if (score === 1) {
             return res.status(200).json({
@@ -53,13 +47,7 @@ module.exports = class ScoreControllers {
   async AllScoreById(req, res, next) {
     try {
       const { id } = req.params;
-      const score = await Score.findAll({
-        where: {
-          userId: id,
-        },
-        order: [["createdAt", "DESC"]],
-        limit: 5,
-      });
+      const score = await scoreServices.historyScoreById(id);
       if (score.length === 0) {
         return res.status(404).json({
           result: "failed",
@@ -82,24 +70,17 @@ module.exports = class ScoreControllers {
   async TotalScore(req, res, next) {
     try {
       const { id } = req.params;
-      const score = await Score.findAll({
-        where: {
-          userId: id,
-        },
-      });
-      if (score.length === 0) {
+      const score = await scoreServices.scoreById(id);
+
+      if (!score.success) {
         return res.status(404).json({
           result: "failed",
-          message: "This player didn't have score",
+          message: score.message,
         });
       } else {
-        let scoreArr = [];
-        score.forEach((score) => {
-          scoreArr.push(score.score);
-        });
         return res.status(200).json({
           result: "Success",
-          totalScore: scoreArr.reduce((partialSum, a) => partialSum + a),
+          totalScore: score.totalScore,
         });
       }
     } catch (error) {
@@ -113,25 +94,16 @@ module.exports = class ScoreControllers {
   async TotalScoreInGame(req, res, next) {
     try {
       const { id, gameId } = req.params;
-      const score = await Score.findAll({
-        where: {
-          userId: id,
-          gameId,
-        },
-      });
-      if (score.length === 0) {
+      const score = await scoreServices.scoreByGameId(id, gameId);
+      if (!score.success) {
         return res.status(404).json({
           result: "failed",
-          message: "This player didn't have score",
+          message: score.message,
         });
       } else {
-        let scoreArr = [];
-        score.forEach((score) => {
-          scoreArr.push(score.score);
-        });
         return res.status(200).json({
           result: "Success",
-          totalScore: scoreArr.reduce((partialSum, a) => partialSum + a),
+          totalScore: score.totalScore,
         });
       }
     } catch (error) {
@@ -144,32 +116,11 @@ module.exports = class ScoreControllers {
 
   async Leaderboard(req, res, next) {
     try {
-      const score = await Score.findAll({
-        // attributes: [
-        //   'userId',
-        //   [sequelize.fn('sum', sequelize.col('score')), 'total_amount'],
-        // ],
-        include: User,
-        // group: ['userId'],
-        // raw: true
-      });
-
-      var result = [];
-      score.reduce(function (res, value) {
-        if (!res[value.userId]) {
-          res[value.userId] = { userId: value.userId, score: 0, username: "" };
-          result.push(res[value.userId]);
-        }
-        res[value.userId].score += value.score;
-        res[value.userId].username = value.User.username;
-        return res;
-      }, {});
-
-      result.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+      const leaderboard = await scoreServices.leaderboard();
 
       return res.status(200).json({
         status: "Success",
-        data: result,
+        data: leaderboard.result,
       });
     } catch (error) {
       return res.status(500).json({
@@ -182,47 +133,16 @@ module.exports = class ScoreControllers {
   async TotalScoreLeaderboard(req, res, next) {
     try {
       const { gameId } = req.params;
-      const scores = await Score.findAll({
-        where: {
-          gameId,
-        },
-      });
 
-      if (scores.length === 0) {
+      const scores = await scoreServices.TotalScoreLeaderboard(gameId);
+      if (!scores.success) {
         return res.status(404).json({
           result: "failed",
-          message: "This game didn't have a score",
+          message: scores.message,
         });
       } else {
-        // Create an object to store user IDs as keys and their scores as values
-        const userScores = {};
-
-        scores.forEach((score) => {
-          if (!userScores[score.userId]) {
-            userScores[score.userId] = 0;
-          }
-          userScores[score.userId] += score.score;
-        });
-
-        const userScoresArray = [];
-
-        // Fetch player information for each user ID and construct the userScoresArray
-        for (const userId of Object.keys(userScores)) {
-          const player = await User.findOne({
-            where: {
-              id: userId,
-            },
-          });
-
-          userScoresArray.push({
-            userId,
-            username: player.username,
-            score: userScores[userId],
-          });
-        }
-
         return res.status(200).json({
-          data: userScoresArray.sort((a, b) => b.score - a.score),
+          data: scores.data,
         });
       }
     } catch (error) {

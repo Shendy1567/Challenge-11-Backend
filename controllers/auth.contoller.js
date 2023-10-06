@@ -1,146 +1,97 @@
-const { User } = require("../database/models");
-const { hashPassword, verifyPassword } = require("../utils/passwordHandler");
-const jwt = require("jsonwebtoken");
+const authServices = require("../services/auth.services");
 
 module.exports = class AuthContollers {
-	async registerPlayer(req, res, next) {
-		const { username, email, password, confPassword } = req.body;
+  async registerPlayer(req, res, next) {
+    try {
+      const { username, email, password, confPassword } = req.body;
 
-		if (await User.findOne({ where: { email } }))
-			return res.status(400).json({ msg: "Email sudah di gunakan" });
+      const existingUser = await authServices.checkByEmail(email);
 
-		if (password !== confPassword)
-			return res.status(400).json({ msg: "Password tidak sama" });
-		const newPassword = await hashPassword(password);
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Email sudah digunakan" });
+      }
 
-		try {
-			await User.create({
-				username: username,
-				email: email,
-				password: newPassword,
-				role: "user",
-				profile_image_url:
-					"https://res.cloudinary.com/dz0cuhiny/image/upload/v1695553065/ldktrzeo1oud4iidzx9f.jpg",
-			});
-			res.status(200);
-			res.json({ msg: "Register player berhasil" });
-		} catch (error) {
-			return res.status(500).json({
-				result: "Error",
-				error: error.message,
-			});
-		}
-	}
+      if (password !== confPassword) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Password tidak sama" });
+      }
 
-	async loginPlayer(req, res) {
-		try {
-			const user = await User.findOne({
-				where: {
-					email: req.body.email,
-				},
-			});
+      const registrationResult = await authServices.registerPlayer(
+        username,
+        email,
+        password,
+        confPassword
+      );
 
-			const matchPassword = await verifyPassword(
-				req.body.password,
-				user.password
-			);
-			if (!matchPassword)
-				return res.status(400).json({ msg: "Password Salah" });
+      if (registrationResult.success) {
+        res
+          .status(200)
+          .json({ success: true, message: registrationResult.message });
+      } else {
+        res
+          .status(400)
+          .json({ success: false, message: registrationResult.message });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
+    }
+  }
 
-			const userId = user.id;
-			const username = user.username;
-			const email = user.email;
+  async loginPlayer(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await authServices.checkByEmail(email);
+      const login = await authServices.loginPlayer(password, user);
 
-			const accessToken = jwt.sign(
-				{ userId, username, email },
-				process.env.ACCESS_TOKEN,
-				{
-					expiresIn: "20s",
-				}
-			);
+      if (login.success) {
+        res.cookie("refreshToken", login.refreshToken, {
+          maxAge: 24 * 60 * 60 * 1000,
+          path: "/",
+        });
 
-			const refreshToken = jwt.sign(
-				{ userId, username, email },
-				process.env.REFRESH_TOKEN,
-				{
-					expiresIn: "1d",
-				}
-			);
+        res.status(200);
+        res.json({ accessToken: login.accessToken });
+      } else {
+        res.status(400).json({ msg: login.message });
+      }
+    } catch (error) {
+      res.status(404).json({ msg: "Email tidak ditemukan" });
+    }
+  }
 
-			await User.update(
-				{ refresh_token: refreshToken },
-				{
-					where: {
-						id: userId,
-					},
-				}
-			);
+  async logoutPlayer(req, res) {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.sendStatus(204);
+    const user = await authServices.checkByToken(refreshToken);
+    if (!user) return res.sendStatus(204);
+    await authServices.logoutPlayer(user);
+    res.clearCookie("refreshToken");
+    return res.sendStatus(200);
+  }
 
-			res.cookie("refreshToken", refreshToken, {
-				maxAge: 24 * 60 * 60 * 1000,
-				path: "/",
-			});
-
-			res.status(200);
-			res.json({ accessToken });
-		} catch (error) {
-			res.status(404).json({ msg: "Email tidak ditemukan" });
-		}
-	}
-
-	async logoutPlayer(req, res) {
-		const refreshToken = req.cookies.refreshToken;
-		if (!refreshToken) return res.sendStatus(204);
-		const user = await User.findOne({
-			where: {
-				refresh_token: refreshToken,
-			},
-		});
-		if (!user) return res.sendStatus(204);
-		const userId = user.id;
-		await User.update(
-			{ refresh_token: null },
-			{
-				where: {
-					id: userId,
-				},
-			}
-		);
-		res.clearCookie("refreshToken");
-		return res.sendStatus(200);
-	}
-
-	async refreshToken(req, res) {
-		try {
-			const refreshToken = req.cookies.refreshToken;
-			if (!refreshToken) return res.sendStatus(204);
-			const user = await User.findOne({
-				where: {
-					refresh_token: refreshToken,
-				},
-			});
-			if (!user) return res.clearCookie("refreshToken").sendStatus(403);
-			jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
-				if (err) return res.clearCookie("refreshToken").sendStatus(403);
-				const userId = user.id;
-				const username = user.username;
-				const email = user.email;
-				const picture = user.profile_image_url;
-
-				const accessToken = jwt.sign(
-					{ userId, username, email, picture },
-					process.env.ACCESS_TOKEN,
-					{
-						expiresIn: "15s",
-					}
-				);
-				res.json({ accessToken });
-			});
-		} catch (error) {
-			return res.status(500).json({
-				result: "Error",
-				error: error.message,
-			});
-		}
-	}
+  async refreshToken(req, res) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) return res.sendStatus(204);
+      const user = await authServices.checkByToken(refreshToken);
+      if (!user) return res.clearCookie("refreshToken").sendStatus(403);
+      const token = await authServices.refreshToken(refreshToken, user);
+      if (token.success) {
+        return res.status(200).json({ accessToken: token.accessToken });
+      } else {
+        return res.status(403).json({ message: token.message });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        result: "Error",
+        error: error.message,
+      });
+    }
+  }
 };

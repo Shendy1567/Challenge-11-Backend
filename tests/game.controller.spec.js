@@ -20,7 +20,7 @@ describe("GetAllGames /api/game", () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({
       result: "Error",
-      error: "Database error",
+      error: "Error fetching all users: Database error",
     });
   });
 });

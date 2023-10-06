@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>66/66</span>
+                <span class='fraction'>57/57</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>66/66</span>
+                <span class='fraction'>57/57</span>
             </div>
         
             
@@ -120,17 +120,7 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -157,6 +147,7 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -171,14 +162,6 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -187,7 +170,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -195,14 +177,13 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { User } = require("../database/models");
-const { hashPassword } = require("../utils/passwordHandler");
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const playerService = require("../services/player.services");
 &nbsp;
 module.exports = class PlayerControllers {
   async getPlayerById(req, res, next) {
     try {
       const { id } = req.params;
-      const player = await User.findByPk(id);
+      const player = await playerService.getPlayerById(id);
       if (player) {
         return res.status(200).json({
           status: "Success",
@@ -226,33 +207,25 @@ module.exports = class PlayerControllers {
     try {
       const { id } = req.params;
       const { username, email, password } = req.body;
-      const data = await User.findByPk(id);
+      const data = await playerService.getPlayerById(id);
+&nbsp;
       if (!data)
         return res.status(404).json({
           result: "Not found",
           message: `Player with id: ${id} not found`,
         });
-      const updateFields = {};
-      if (username) {
-        updateFields.username = username;
-      }
 &nbsp;
-      if (email) {
-        updateFields.email = email;
-      }
+      const result = await playerService.updatePlayer(
+        id,
+        username,
+        email,
+        password
+      );
 &nbsp;
-      if (password) {
-        updateFields.password = await hashPassword(password);
-      }
-      const [updateCount] = await User.update(updateFields, {
-        where: { id: id },
+      return res.status(200).json({
+        result: "Success",
+        message: result.message,
       });
-      if (updateCount === 1) {
-        return res.status(200).json({
-          result: "Success",
-          message: `Player with id: ${id} successfully updated`,
-        });
-      }
     } catch (error) {
       return res.status(500).json({
         result: "Error",
@@ -268,7 +241,7 @@ module.exports = class PlayerControllers {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-27T14:08:32.657Z
+                at 2023-10-06T16:58:27.516Z
             </div>
         <script src="../prettify.js"></script>
         <script>

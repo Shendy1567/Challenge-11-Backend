@@ -69,7 +69,7 @@ describe("GetPlayerById /api/player/:id", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       result: "Error",
-      error: "Database error",
+      error: "Error fetching all users: Database error",
     });
   });
 });
@@ -142,7 +142,7 @@ describe("updatePlayer Function Tests", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       result: "Error",
-      error: "Database error",
+      error: "Error fetching all users: Database error",
     });
   });
 });
